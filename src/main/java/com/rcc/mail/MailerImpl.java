@@ -14,7 +14,7 @@ import javax.mail.internet.MimeMessage;
 
 import java.util.List;
 
-public class MailerImpl {
+public class MailerImpl implements Mailer {
     private static final Log log = LogFactory.getLog(MailerImpl.class);
 
     private JavaMailSenderImpl mailSender;
