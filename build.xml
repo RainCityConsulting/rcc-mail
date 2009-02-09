@@ -1,0 +1,42 @@
+<project name="rcc-mail" default="compile" basedir=".">
+
+    <property name="name" value="rcc-mail"/>
+
+    <property name="deploy.dir" value="/home/ian/work/max/trunk/dist/dev/tomcat/webapps"/>
+
+    <loadfile property="version" srcFile="${basedir}/.version">
+        <filterchain>
+            <striplinebreaks/>
+        </filterchain>
+    </loadfile>
+
+    <path id="compile.classpath">
+        <fileset dir="lib">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement location="target/classes"/>
+    </path>
+
+    <target name="clean" description="Remove generated files">
+        <delete dir="target"/>
+    </target>
+
+    <target name="compile" description="Compile">
+        <mkdir dir="target/classes"/>
+
+        <copy todir="target/classes">
+            <fileset dir="src/main/resources"/>
+        </copy>
+
+        <javac
+                debug="true"
+                srcdir="src/main/java"
+                destdir="target/classes"
+                classpathref="compile.classpath"/>
+    </target>
+
+    <target name="jar" description="Create jar" depends="compile">
+        <jar destfile="target/${name}-${version}.jar" basedir="target/classes"/>
+    </target>
+
+</project>
