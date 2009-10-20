@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.internet.MimeMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MailerImpl implements Mailer {
@@ -23,6 +24,15 @@ public class MailerImpl implements Mailer {
         this.mailSender = mailSender;
     }
 
+    public void send(String from, String to, List<String> cc, List<String> bcc,
+            String subject, String textBody)
+        throws MailException
+    {
+        List<String> tos = new ArrayList<String>();
+        tos.add(to);
+        this.send(from, tos, cc, bcc, subject, textBody);
+    }
+
     public void send(String from, List<String> to, List<String> cc, List<String> bcc,
             String subject, String textBody)
         throws MailException
@@ -30,8 +40,33 @@ public class MailerImpl implements Mailer {
         this.send(from, to, cc, bcc, subject, null, textBody);
     }
 
+    public void send(String from, String to, List<String> cc, List<String> bcc,
+            String subject, String htmlBody, String textBody)
+        throws MailException
+    {
+        List<String> tos = new ArrayList<String>();
+        tos.add(to);
+        this.send(from, tos, cc, bcc, subject, htmlBody, textBody);
+    }
+
     public void send(String from, List<String> to, List<String> cc, List<String> bcc,
             String subject, String htmlBody, String textBody)
+        throws MailException
+    {
+        this.send(from, to, cc, bcc, subject, htmlBody, textBody, null);
+    }
+
+    public void send(String from, String to, List<String> cc, List<String> bcc,
+            String subject, String htmlBody, String textBody, List<Mailer.Attachment> attachments)
+        throws MailException
+    {
+        List<String> tos = new ArrayList<String>();
+        tos.add(to);
+        this.send(from, tos, cc, bcc, subject, htmlBody, textBody, attachments);
+    }
+
+    public void send(String from, List<String> to, List<String> cc, List<String> bcc,
+            String subject, String htmlBody, String textBody, List<Mailer.Attachment> attachments)
         throws MailException
     {
         try {
@@ -56,6 +91,16 @@ public class MailerImpl implements Mailer {
                 helper.setText(htmlBody, true);
             } else {
                 helper.setText(textBody, false);
+            }
+
+            if (attachments != null) {
+                for (Mailer.Attachment a : attachments) {
+                    if (a.getContentType() == null) {
+                        helper.addAttachment(a.getName(), a.getSource());
+                    } else {
+                        helper.addAttachment(a.getName(), a.getSource(), a.getContentType());
+                    }
+                }
             }
 
             this.mailSender.send(message);
