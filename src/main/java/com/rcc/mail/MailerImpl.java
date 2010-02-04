@@ -73,7 +73,9 @@ public class MailerImpl implements Mailer {
             MimeMessage message = this.mailSender.createMimeMessage();
 
             MimeMessageHelper helper = null;
-            if (textBody != null && htmlBody != null) {
+            if ((textBody != null && htmlBody != null) ||
+                    (attachments != null && !attachments.isEmpty()))
+            {
                 helper = new MimeMessageHelper(message, true);
             } else {
                 helper = new MimeMessageHelper(message, false);
