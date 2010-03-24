@@ -49,6 +49,10 @@ public interface Mailer {
             String subject, String htmlBody, String textBody, List<Attachment> attachments)
         throws MailException;
 
+    public void send(String from, String replyTo, List<String> to, List<String> cc, List<String> bcc,
+            String subject, String htmlBody, String textBody, List<Attachment> attachments)
+        throws MailException;
+
     public void send(String from, String to, List<String> cc, List<String> bcc,
             String subject, String htmlBody, String textBody)
         throws MailException;

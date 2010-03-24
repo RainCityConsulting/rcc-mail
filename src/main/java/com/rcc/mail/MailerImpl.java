@@ -69,6 +69,13 @@ public class MailerImpl implements Mailer {
             String subject, String htmlBody, String textBody, List<Mailer.Attachment> attachments)
         throws MailException
     {
+        this.send(from, null, to, cc, bcc, subject, htmlBody, textBody, attachments);
+    }
+
+    public void send(String from, String replyTo, List<String> to, List<String> cc, List<String> bcc,
+            String subject, String htmlBody, String textBody, List<Attachment> attachments)
+        throws MailException
+    {
         try {
             MimeMessage message = this.mailSender.createMimeMessage();
 
@@ -80,6 +87,8 @@ public class MailerImpl implements Mailer {
             } else {
                 helper = new MimeMessageHelper(message, false);
             }
+
+            if (replyTo != null) { helper.setReplyTo(replyTo); }
 
             helper.setTo(to.toArray(new String[0]));
             if (cc != null) { helper.setCc(cc.toArray(new String[0])); }
